@@ -16,21 +16,21 @@ public class GameStats : MonoBehaviour
     
    
     private int gameScore = 0;
-    private float gameTimerStart = 10.0f;
     private float gameTimer;
     private bool gameStarted;
     private bool gameFinished;
 
-    // TODO: Figure out if it's possible to determine game status using only a single bool statement (rather than gameStarted & gameFinished)
-    // TODO: Save highscore
-    // TODO: Settings tab (timer value, tile count)
+    private int highscore;
+    private int timer;
+
     // TODO: Audio
+    // TODO: Volume adjustment
 
     //// PUBLIC FUNCTIONS
     // Function signals game start
     public void InitiateGame()
     {
-        gameTimer = gameTimerStart;
+        gameTimer = (float)timer;
         gameStarted = true;
         InstructionText.SetActive(false);
     }
@@ -43,6 +43,10 @@ public class GameStats : MonoBehaviour
         UpdateScoreResultText(gameScore);
         UpdateTimerResultText();
         ResultCanvas.SetActive(true);
+        if(HighscoreCheck(gameScore))
+        {
+            Debug.Log("New highscore: "+gameScore);
+        }
     }
 
     // Function increases score value, called remotely when tile is pressed
@@ -73,6 +77,8 @@ public class GameStats : MonoBehaviour
         gameStarted = false;
         gameFinished = false;
         ResultCanvas.SetActive(false);
+        timer = PlayerPrefs.GetInt("Timer",10);
+        highscore = PlayerPrefs.GetInt("Highscore"+timer,0);
         UpdateTimerText();
         UpdateScoreText(0);
     }
@@ -92,6 +98,17 @@ public class GameStats : MonoBehaviour
 
             UpdateTimerText();
         }
+    }
+
+    private bool HighscoreCheck(int newScore)
+    {
+        if(newScore > highscore)
+        {
+            PlayerPrefs.SetInt("Highscore"+timer,newScore);
+            highscore = newScore;
+            return true;
+        }
+        return false;
     }
 
     // Function updates text for Score UI Element
@@ -115,6 +132,6 @@ public class GameStats : MonoBehaviour
     // Function updates text for Timer Result UI Element
     private void UpdateTimerResultText()
     { 
-        TimerResultText.GetComponent<Text>().text = "TIMER: " + gameTimerStart.ToString("00.00");
+        TimerResultText.GetComponent<Text>().text = "TIMER: " + timer.ToString("00.00");
     }
 }
