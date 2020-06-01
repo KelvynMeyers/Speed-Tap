@@ -32,7 +32,6 @@ public class SettingsBehavior : MonoBehaviour
 
     public void ResetHighscore()
     {
-        Debug.Log(resetConfirm);
         if(resetConfirm == 4)
         {
             resetConfirm--;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TilePress : MonoBehaviour
 {
     // VARIABLES
-    public GameStats gameStats;
+    public GameBehavior gameBehavior;
 
     private Rigidbody2D rgbd2d;
 
@@ -17,18 +17,12 @@ public class TilePress : MonoBehaviour
 
     void OnMouseDown()
     {
-        //Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0,Screen.width), Random.Range(0,Screen.height), Camera.main.farClipPlane/2));
-        //var ScoreTextPosY = ScoreText.GetComponent<RectTransform>.position.y;
-
-        // TODO: Limit tile from going below ScoreText so you can implement a nearby BackButton
-        if(gameStats.IsGameFinished())
-        {
-            return;
-        }
+        if(gameBehavior.IsGameFinished()) return;
         var maxHeight = Screen.height;
         var maxWidth = Screen.width;
         Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0,maxWidth), Random.Range(0,maxHeight), Camera.main.farClipPlane/2));
         transform.position = screenPosition;
-        gameStats.IncrementScoreValue();
+        gameBehavior.IncrementScoreValue();
+        AudioManager.instance.Play("TileTap");
     }
 }
