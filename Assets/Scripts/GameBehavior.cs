@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class GameBehavior : MonoBehaviour
 {
     //// VARIABLES
+
+    // Object References
     public GameObject ResultCanvas;
     public GameObject ScoreResultText;
     public GameObject TimerResultText;
@@ -14,17 +16,19 @@ public class GameBehavior : MonoBehaviour
     public GameObject TimerText;
     public GameObject InstructionText;
     
-   
+   // General global use
     private int gameScore = 0;
     private float gameTimer;
     private bool gameStarted;
     private bool gameFinished;
 
+    // Used to retrieve saved settings
     private int highscore;
     private int timer;
 
     //// PUBLIC FUNCTIONS
-    // Function signals game start
+   
+   // Tile pressed signals game start
     public void InitiateGame()
     {
         gameTimer = (float)timer;
@@ -32,45 +36,45 @@ public class GameBehavior : MonoBehaviour
         InstructionText.SetActive(false);
     }
 
-    // Function signals game halt
+    // Timer exhausted signals game halt
     public void StopGame()
     {
         gameStarted = false;
         gameFinished = true;
         AudioManager.instance.Play("TimerStop");
-        AudioManager.instance.Play("TimerStop");
         UpdateScoreResultText(gameScore);
         UpdateTimerResultText();
+
+        // Move result UI from off-camera to center screen, then activate it
+        RectTransform resultCanvasRT = ResultCanvas.GetComponent<RectTransform>();
+        resultCanvasRT.anchoredPosition = Vector3.zero;
         ResultCanvas.SetActive(true);
+
+        // Possible play sound here when new highscore valid
         if(HighscoreCheck(gameScore))
         {
             Debug.Log("New highscore: "+gameScore);
         }
     }
 
-    // Function increases score value, called remotely when tile is pressed
+    // Called remotely when tile is pressed, increases score value
     public void IncrementScoreValue()
     {
-        if(gameFinished)
-        {
-            return;
-        }
-        if(!gameStarted)
-        {
-            InitiateGame();
-        }
+        if(gameFinished) return;
+        if(!gameStarted) InitiateGame();
         gameScore++;
         UpdateScoreText(gameScore);  
     }
 
-    // Function returns true or false depending on if game is finished
+    // Says if game is still running or not
     public bool IsGameFinished()
     {
         return gameFinished;
     }
 
     //// PRIVATE FUNCTIONS
-    // Function begins on startup
+
+    // On startup, prepare for game events & remote calls
     private void Start()
     {
         gameStarted = false;
@@ -82,16 +86,17 @@ public class GameBehavior : MonoBehaviour
         UpdateScoreText(0);
     }
 
-    // Function runs every frame
+    // Handles timer updates per frame
     private void Update()
     {
         if(gameStarted)
         {
             gameTimer-=Time.deltaTime;
-
+            // Begin clockdown sound
             if(gameTimer <= 5)
             {
                 if(!AudioManager.instance.IsSoundPlaying("ClockTick")) AudioManager.instance.Play("ClockTick");
+                // End game
                 if(gameTimer <= 0)
                 {
                     AudioManager.instance.Stop("ClockTick");
@@ -99,11 +104,12 @@ public class GameBehavior : MonoBehaviour
                     StopGame();
                 }
             }
-
+            // Update timer every frame
             UpdateTimerText();
         }
     }
 
+    // Determines if provided score is valid for new highscore
     private bool HighscoreCheck(int newScore)
     {
         if(newScore > highscore)

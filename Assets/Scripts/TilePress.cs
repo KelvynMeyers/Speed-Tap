@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class TilePress : MonoBehaviour
 {
-    // VARIABLES
+    //// VARIABLES
     public GameBehavior gameBehavior;
 
     private Rigidbody2D rgbd2d;
 
-    // FUNCTIONS
-    void Start()
+    /// PRIVATE FUNCTIONS
+
+    // Grabs rigidbody value for position transforms
+    private void Start()
     {
         rgbd2d = GetComponent<Rigidbody2D> ();
     }
 
-    void OnMouseDown()
+    // On tile press, randomize position somewhere on-screen, remotely call a score increase function, and play a click sound
+    private void OnMouseDown()
     {
         if(gameBehavior.IsGameFinished()) return;
         var maxHeight = Screen.height;
