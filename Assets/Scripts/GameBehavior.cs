@@ -15,6 +15,7 @@ public class GameBehavior : MonoBehaviour
     public GameObject ScoreText;
     public GameObject TimerText;
     public GameObject InstructionText;
+    public GameObject HighscoreSprite;
     
    // General global use
     private int gameScore = 0;
@@ -53,7 +54,7 @@ public class GameBehavior : MonoBehaviour
         // Possible play sound here when new highscore valid
         if(HighscoreCheck(gameScore))
         {
-            Debug.Log("New highscore: "+gameScore);
+            DisplayHighScoreUI();
         }
     }
 
@@ -80,6 +81,7 @@ public class GameBehavior : MonoBehaviour
         gameStarted = false;
         gameFinished = false;
         ResultCanvas.SetActive(false);
+        HighscoreSprite.SetActive(false);
         timer = PlayerPrefs.GetInt("Timer",10);
         highscore = PlayerPrefs.GetInt("Highscore"+timer,0);
         UpdateTimerText();
@@ -119,6 +121,13 @@ public class GameBehavior : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    // Play highscore sound and display sprite
+    private void DisplayHighScoreUI()
+    {
+        AudioManager.instance.Play("NewHighscore");
+        HighscoreSprite.SetActive(true);
     }
 
     // Function updates text for Score UI Element

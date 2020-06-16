@@ -53,3 +53,6 @@ TagManager:
   - name: ResultUI
     uniqueID: 3020069429
     locked: 0
+  - name: AccentUI
+    uniqueID: 3383252607
+    locked: 0

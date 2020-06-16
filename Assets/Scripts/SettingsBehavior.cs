@@ -33,7 +33,7 @@ public class SettingsBehavior : MonoBehaviour
 
         PlayerPrefs.SetInt("Timer",timerOptions[selectedTimerOption]);
         timer = PlayerPrefs.GetInt("Timer",10);
-        resetConfirm = 3;
+        resetConfirm = maxConfirmations;
         highscore = PlayerPrefs.GetInt("Highscore"+timer,0);
         UpdateTimerLengthText(timer);
         UpdateResetText();
@@ -59,7 +59,7 @@ public class SettingsBehavior : MonoBehaviour
         // Post-confirmation text
         PlayerPrefs.SetInt("Highscore"+timer,0);
         highscore = 0;
-        resetConfirm = 3;
+        resetConfirm = maxConfirmations;
         UpdateResetText();
     }
 
@@ -86,7 +86,7 @@ public class SettingsBehavior : MonoBehaviour
     // Provided parameter => Warning view
     private void UpdateResetText(int confirmValue)
     {
-        ResetText.GetComponent<Text>().text = "Press " + confirmValue + " times to confirm reset!";
+        ResetText.GetComponent<Text>().text = "Press " + confirmValue + " times to confirm!";
     }
 
     // Updates ResetText element with default highscore reset text
